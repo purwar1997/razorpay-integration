@@ -1,0 +1,11 @@
+{
+  "name": "razorpay-integration",
+  "version": "1.0.0",
+  "description": "A node.js project to integrate razorpay with our application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shubham",
+  "license": "ISC"
+}
