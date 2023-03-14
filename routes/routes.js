@@ -13,6 +13,9 @@ const {
   fetchSpecificRefundOfPayment,
   fetchAllRefunds,
   fetchRefundById,
+  fetchAllSettlements,
+  fetchSettlementById,
+  fetchAllSettlementsOfMonthOrDay,
 } = require('../controllers/razorpay.controllers');
 
 const router = express.Router();
@@ -30,5 +33,8 @@ router.get('/api/payment/:paymentId/refunds', fetchMultipleRefundsOfPayment);
 router.get('/api/payment/:paymentId/refund/:refundId', fetchSpecificRefundOfPayment);
 router.get('/api/refunds', fetchAllRefunds);
 router.get('/api/refund/:refundId', fetchRefundById);
+router.get('/api/settlements', fetchAllSettlements);
+router.get('/api/settlement/:settlementId', fetchSettlementById);
+router.get('/api/settlements/recon', fetchAllSettlementsOfMonthOrDay);
 
 module.exports = router;

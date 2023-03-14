@@ -1,6 +1,8 @@
+import settlements from 'razorpay/dist/types/settlements';
+
 const uuid = require('uuid');
-const razorpay = require('./config/razorpay.config');
-const asyncHandler = require('./services/asyncHandler');
+const razorpay = require('../config/razorpay.config');
+const asyncHandler = require('../services/asyncHandler');
 
 // Create an order
 export const createOrder = asyncHandler(async (req, res) => {
@@ -25,7 +27,7 @@ export const createOrder = asyncHandler(async (req, res) => {
 
 // Fetch all orders
 export const fetchAllOrders = asyncHandler(async (_req, res) => {
-  const orders = await razorpay.orders.all({ 'expand[]': 'payments.card' });
+  const orders = await razorpay.orders.all({ count: 100, 'expand[]': 'payments.card' });
 
   res.status(200).json({
     success: true,
@@ -108,8 +110,8 @@ export const fetchPaymentById = asyncHandler(async (req, res) => {
 });
 
 // Fetch all payments
-export const fetchAllPayments = asyncHandler(async (req, res) => {
-  const payments = await razorpay.payments.all({ 'expand[]': 'card' });
+export const fetchAllPayments = asyncHandler(async (_req, res) => {
+  const payments = await razorpay.payments.all({ count: 100, 'expand[]': 'card' });
 
   res.status(200).json({
     success: true,
@@ -201,7 +203,7 @@ export const fetchSpecificRefundOfPayment = asyncHandler(async (req, res) => {
 
 // Fetch all refunds
 export const fetchAllRefunds = asyncHandler(async (_req, res) => {
-  const refunds = await razorpay.refunds.all({ count: 20 });
+  const refunds = await razorpay.refunds.all({ count: 100 });
 
   res.status(201).json({
     success: true,
@@ -224,5 +226,65 @@ export const fetchRefundById = asyncHandler(async (req, res) => {
     success: true,
     message: 'Refund successfully fetched',
     refund,
+  });
+});
+
+// Fetch all settlements
+export const fetchAllSettlements = asyncHandler(async (_req, res) => {
+  const settlements = await razorpay.settlements.all({ count: 100 });
+
+  res.status(200).json({
+    success: true,
+    message: 'Settlements successfully fetched',
+    settlements: settlements.items,
+  });
+});
+
+// Fetch settlement by id
+export const fetchSettlementById = asyncHandler(async (req, res) => {
+  const { settlementId } = req.params;
+
+  if (!settlementId) {
+    throw new Error('Settlement id not provided');
+  }
+
+  const settlement = await razorpay.settlements.fetch(settlementId);
+
+  res.status(200).json({
+    success: true,
+    message: 'Settlement successfully fetched',
+    settlement,
+  });
+});
+
+// Fetch all settlements of a month or day
+export const fetchAllSettlementsOfMonthOrDay = asyncHandler(async (req, res) => {
+  const { year, month, day } = req.query;
+
+  if (!(year && month)) {
+    throw new Error('Please provide an year and month');
+  }
+
+  let settlements;
+
+  if (day) {
+    settlements = await razorpay.settlements.settlementRecon({
+      year,
+      month,
+      day,
+      count: 100,
+    });
+  } else {
+    settlements = await razorpay.settlements.settlementRecon({
+      year,
+      month,
+      count: 100,
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `All settlements successfully fetched`,
+    settlements: settlements.items,
   });
 });
