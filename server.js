@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const uuid = require(uuid);
+const uuid = require('uuid');
 const razorpay = require('./config/razorpay.config');
 const config = require('./config/config');
 const asyncHandler = require('./services/asyncHandler');
@@ -16,7 +16,7 @@ app.use(
 
 // Create an order
 app.post(
-  '/api/order',
+  '/api/order/create',
   asyncHandler(async (req, res) => {
     const { amount } = req.body;
 
@@ -137,8 +137,38 @@ app.get(
 );
 
 // Fetch all payments
+app.get(
+  '/api/payments',
+  asyncHandler(async (req, res) => {
+    const payments = await razorpay.payments.all({ 'expand[]': 'card' });
+
+    res.status(200).json({
+      success: true,
+      message: 'Payments successfully fetched',
+      payments: payments.items,
+    });
+  })
+);
 
 // Fetch card details of a payment
+app.get(
+  '/api/payment/:paymentId/card',
+  asyncHandler(async (req, res) => {
+    const { paymentId } = req.params;
+
+    if (!paymentId) {
+      throw new Error('Payment id not provided');
+    }
+
+    const card = await razorpay.payments.fetchCardDetails(paymentId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Card details successfully fetched',
+      card,
+    });
+  })
+);
 
 // Refund a payment
 
