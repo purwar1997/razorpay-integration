@@ -17,8 +17,6 @@ module.exports = {
       receipt: uuid.v4(),
     });
 
-    console.log(order);
-
     res.status(201).json({
       success: true,
       message: 'Order successfully created',
@@ -66,7 +64,7 @@ module.exports = {
 
     res.status(200).json({
       success: true,
-      message: `Payments successfully fetched for order ${orderId}`,
+      message: `Payments successfully fetched for orderId ${orderId}`,
       payments,
     });
   }),
@@ -84,7 +82,7 @@ module.exports = {
       throw new Error('Payment amount not provided');
     }
 
-    const payment = await razorpay.payments.capture(paymentId, { amount, currency: 'INR' });
+    const payment = await razorpay.payments.capture(paymentId, amount, 'INR');
 
     res.status(201).json({
       success: true,
@@ -164,7 +162,7 @@ module.exports = {
     });
   }),
 
-  // Fetch multiple refunds for a payment
+  // Fetch multiple refunds of a payment
   fetchMultipleRefundsOfPayment: asyncHandler(async (req, res) => {
     const { paymentId } = req.params;
 
@@ -181,7 +179,7 @@ module.exports = {
     });
   }),
 
-  // Fetch a specific refund for a payment
+  // Fetch specific refund of a payment
   fetchSpecificRefundOfPayment: asyncHandler(async (req, res) => {
     const { paymentId, refundId } = req.params;
 

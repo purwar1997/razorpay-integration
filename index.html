@@ -37,9 +37,6 @@
           name: 'iNeuron',
           description: 'Transaction done in test mode',
           image: 'https://ineuron.ai/images/ineuron-logo.png',
-          handler: function (response) {
-            console.log(response);
-          },
           prefill: {
             name: 'Shubham Purwar',
             email: 'shubhampurwar35@gmail.com',
@@ -48,6 +45,19 @@
           },
           theme: {
             color: '#1C8D73',
+          },
+          handler: async function (response) {
+            const paymentId = response.razorpay_payment_id;
+
+            await fetch(`http://localhost:4000/api/payment/${paymentId}/capture`, {
+              method: 'POST',
+              body: JSON.stringify({
+                amount: order.amount,
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
           },
         };
 
