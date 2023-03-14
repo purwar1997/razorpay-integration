@@ -1,0 +1,36 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  font-size: 17px;
+  font-family: 'Segoe UI';
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+input {
+  width: 250px;
+  padding: 12px 20px;
+  border: 1px solid gray;
+  border-radius: 25px;
+}
+
+button {
+  padding: 9px 25px;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  background-color: #555;
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 0.85;
+}
