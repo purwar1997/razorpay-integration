@@ -256,8 +256,8 @@ module.exports = {
     });
   }),
 
-  // Fetch all settlements of a month or day
-  fetchAllSettlementsOfMonthOrDay: asyncHandler(async (req, res) => {
+  // Fetch settlement reports of a day or month
+  fetchSettlementReports: asyncHandler(async (req, res) => {
     const { year, month, day } = req.query;
 
     if (!(year && month)) {
@@ -267,14 +267,14 @@ module.exports = {
     let settlements;
 
     if (day) {
-      settlements = await razorpay.settlements.settlementRecon({
+      settlements = await razorpay.settlements.reports({
         year,
         month,
         day,
-        count: 100,
+        count: 20,
       });
     } else {
-      settlements = await razorpay.settlements.settlementRecon({
+      settlements = await razorpay.settlements.reports({
         year,
         month,
         count: 100,
@@ -283,7 +283,7 @@ module.exports = {
 
     res.status(200).json({
       success: true,
-      message: `All settlements successfully fetched`,
+      message: 'Settlement reports successfully fetched',
       settlements: settlements.items,
     });
   }),
